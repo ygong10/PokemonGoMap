@@ -1,0 +1,344 @@
+DROP PROCEDURE IF EXISTS sp_createHourReference $$
+CREATE PROCEDURE sp_createHourReference()
+BEGIN
+	CREATE TABLE hour(
+        Id		INT NOT NULL PRIMARY KEY
+    );
+END $$
+DROP PROCEDURE IF EXISTS sp_createMinuteReference $$
+CREATE PROCEDURE sp_createMinuteReference()
+BEGIN
+	CREATE TABLE minute(
+        Id		INT NOT NULL PRIMARY KEY
+    );
+END $$
+DROP PROCEDURE IF EXISTS sp_createPokemonInfoTable $$
+CREATE PROCEDURE sp_createPokemonInfoTable ()
+BEGIN
+	CREATE TABLE pokemonInfo (
+        id 			INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+        pokemonName 		VARCHAR( 60 ) NOT NULL ,
+        latitude		FLOAT( 10, 6 ) NOT NULL ,
+        longitude 		FLOAT( 10, 6 ) NOT NULL ,
+	hour			INT NOT NULL ,
+	minute			INT NOT NULL ,
+	createdDate		DATETIME NOT NULL,
+	FOREIGN KEY (pokemonName) REFERENCES pokemonName(pokemonName),
+	FOREIGN KEY (hour) REFERENCES hour(Id),
+	FOREIGN KEY (minute) REFERENCES minute(Id)
+    );
+END $$
+DROP PROCEDURE IF EXISTS sp_createPokemonNameReference $$
+CREATE PROCEDURE sp_createPokemonNameReference()
+BEGIN
+	CREATE TABLE pokemonName(
+        pokemonName 		VARCHAR( 60 ) NOT NULL PRIMARY KEY
+    );
+END $$
+DROP PROCEDURE IF EXISTS sp_fillHourReference $$
+CREATE PROCEDURE sp_fillHourReference ()
+BEGIN
+INSERT INTO hour VALUES(0);
+INSERT INTO hour VALUES(1);
+INSERT INTO hour VALUES(2);
+INSERT INTO hour VALUES(3);
+INSERT INTO hour VALUES(4);
+INSERT INTO hour VALUES(5);
+INSERT INTO hour VALUES(6);
+INSERT INTO hour VALUES(7);
+INSERT INTO hour VALUES(8);
+INSERT INTO hour VALUES(9);
+INSERT INTO hour VALUES(10);
+INSERT INTO hour VALUES(11);
+INSERT INTO hour VALUES(12);
+INSERT INTO hour VALUES(13);
+INSERT INTO hour VALUES(14);
+INSERT INTO hour VALUES(15);
+INSERT INTO hour VALUES(16);
+INSERT INTO hour VALUES(17);
+INSERT INTO hour VALUES(18);
+INSERT INTO hour VALUES(19);
+INSERT INTO hour VALUES(20);
+INSERT INTO hour VALUES(21);
+INSERT INTO hour VALUES(22);
+INSERT INTO hour VALUES(23);
+END $$
+
+DROP PROCEDURE IF EXISTS sp_fillMinuteReference $$
+CREATE PROCEDURE sp_fillMinuteReference ()
+BEGIN
+INSERT INTO minute VALUES(0);
+INSERT INTO minute VALUES(1);
+INSERT INTO minute VALUES(2);
+INSERT INTO minute VALUES(3);
+INSERT INTO minute VALUES(4);
+INSERT INTO minute VALUES(5);
+INSERT INTO minute VALUES(6);
+INSERT INTO minute VALUES(7);
+INSERT INTO minute VALUES(8);
+INSERT INTO minute VALUES(9);
+INSERT INTO minute VALUES(10);
+INSERT INTO minute VALUES(11);
+INSERT INTO minute VALUES(12);
+INSERT INTO minute VALUES(13);
+INSERT INTO minute VALUES(14);
+INSERT INTO minute VALUES(15);
+INSERT INTO minute VALUES(16);
+INSERT INTO minute VALUES(17);
+INSERT INTO minute VALUES(18);
+INSERT INTO minute VALUES(19);
+INSERT INTO minute VALUES(20);
+INSERT INTO minute VALUES(21);
+INSERT INTO minute VALUES(22);
+INSERT INTO minute VALUES(23);
+INSERT INTO minute VALUES(24);
+INSERT INTO minute VALUES(25);
+INSERT INTO minute VALUES(26);
+INSERT INTO minute VALUES(27);
+INSERT INTO minute VALUES(28);
+INSERT INTO minute VALUES(29);
+INSERT INTO minute VALUES(30);
+INSERT INTO minute VALUES(31);
+INSERT INTO minute VALUES(32);
+INSERT INTO minute VALUES(33);
+INSERT INTO minute VALUES(34);
+INSERT INTO minute VALUES(35);
+INSERT INTO minute VALUES(36);
+INSERT INTO minute VALUES(37);
+INSERT INTO minute VALUES(38);
+INSERT INTO minute VALUES(39);
+INSERT INTO minute VALUES(40);
+INSERT INTO minute VALUES(41);
+INSERT INTO minute VALUES(42);
+INSERT INTO minute VALUES(43);
+INSERT INTO minute VALUES(44);
+INSERT INTO minute VALUES(45);
+INSERT INTO minute VALUES(46);
+INSERT INTO minute VALUES(47);
+INSERT INTO minute VALUES(48);
+INSERT INTO minute VALUES(49);
+INSERT INTO minute VALUES(50);
+INSERT INTO minute VALUES(51);
+INSERT INTO minute VALUES(52);
+INSERT INTO minute VALUES(53);
+INSERT INTO minute VALUES(54);
+INSERT INTO minute VALUES(55);
+INSERT INTO minute VALUES(56);
+INSERT INTO minute VALUES(57);
+INSERT INTO minute VALUES(58);
+INSERT INTO minute VALUES(59);
+END $$
+
+DROP PROCEDURE IF EXISTS sp_fillPokemonNameReference $$
+CREATE PROCEDURE sp_fillPokemonNameReference ()
+BEGIN
+	INSERT INTO pokemonName VALUES ('Bulbasaur');
+	INSERT INTO pokemonName VALUES ('Ivysaur');
+	INSERT INTO pokemonName VALUES ('Venusaur');
+	INSERT INTO pokemonName VALUES ('Charmander');
+	INSERT INTO pokemonName VALUES ('Charmeleon');
+	INSERT INTO pokemonName VALUES ('Charizard');
+	INSERT INTO pokemonName VALUES ('Squirtle');
+	INSERT INTO pokemonName VALUES ('Wartortle');
+	INSERT INTO pokemonName VALUES ('Blastoise');
+	INSERT INTO pokemonName VALUES ('Caterpie');
+	INSERT INTO pokemonName VALUES ('Metapod');
+	INSERT INTO pokemonName VALUES ('Butterfree');
+	INSERT INTO pokemonName VALUES ('Weedle');
+	INSERT INTO pokemonName VALUES ('Kakuna');
+	INSERT INTO pokemonName VALUES ('Beedrill');
+	INSERT INTO pokemonName VALUES ('Pidgey');
+	INSERT INTO pokemonName VALUES ('Pidgeotto');
+	INSERT INTO pokemonName VALUES ('Pidgeot');
+	INSERT INTO pokemonName VALUES ('Rattata');
+	INSERT INTO pokemonName VALUES ('Raticate');
+	INSERT INTO pokemonName VALUES ('Spearow');
+	INSERT INTO pokemonName VALUES ('Fearow');
+	INSERT INTO pokemonName VALUES ('Ekans');
+	INSERT INTO pokemonName VALUES ('Arbok');
+	INSERT INTO pokemonName VALUES ('Pikachu');
+	INSERT INTO pokemonName VALUES ('Raichu');
+	INSERT INTO pokemonName VALUES ('Sandshrew');
+	INSERT INTO pokemonName VALUES ('Sandslash');
+	INSERT INTO pokemonName VALUES ('Nidoran F');
+	INSERT INTO pokemonName VALUES ('Nidorina');
+	INSERT INTO pokemonName VALUES ('Nidoqueen');
+	INSERT INTO pokemonName VALUES ('Nidoran M');
+	INSERT INTO pokemonName VALUES ('Nidorino');
+	INSERT INTO pokemonName VALUES ('Nidoking');
+	INSERT INTO pokemonName VALUES ('Clefairy');
+	INSERT INTO pokemonName VALUES ('Clefable');
+	INSERT INTO pokemonName VALUES ('Vulpix');
+	INSERT INTO pokemonName VALUES ('Ninetales');
+	INSERT INTO pokemonName VALUES ('Jigglypuff');
+	INSERT INTO pokemonName VALUES ('Wigglytuff');
+	INSERT INTO pokemonName VALUES ('Zubat');
+	INSERT INTO pokemonName VALUES ('Golbat');
+	INSERT INTO pokemonName VALUES ('Oddish');
+	INSERT INTO pokemonName VALUES ('Gloom');
+	INSERT INTO pokemonName VALUES ('Vileplume');
+	INSERT INTO pokemonName VALUES ('Paras');
+	INSERT INTO pokemonName VALUES ('Parasect');
+	INSERT INTO pokemonName VALUES ('Venonat');
+	INSERT INTO pokemonName VALUES ('Venomoth');
+	INSERT INTO pokemonName VALUES ('Diglett');
+	INSERT INTO pokemonName VALUES ('Dugtrio');
+	INSERT INTO pokemonName VALUES ('Meowth');
+	INSERT INTO pokemonName VALUES ('Persian');
+	INSERT INTO pokemonName VALUES ('Psyduck');
+	INSERT INTO pokemonName VALUES ('Golduck');
+	INSERT INTO pokemonName VALUES ('Mankey');
+	INSERT INTO pokemonName VALUES ('Primeape');
+	INSERT INTO pokemonName VALUES ('Growlithe');
+	INSERT INTO pokemonName VALUES ('Arcanine');
+	INSERT INTO pokemonName VALUES ('Poliwag');
+	INSERT INTO pokemonName VALUES ('Poliwhirl');
+	INSERT INTO pokemonName VALUES ('Poliwrath');
+	INSERT INTO pokemonName VALUES ('Abra');
+	INSERT INTO pokemonName VALUES ('Kadabra');
+	INSERT INTO pokemonName VALUES ('Alakazam');
+	INSERT INTO pokemonName VALUES ('Machop');
+	INSERT INTO pokemonName VALUES ('Machoke');
+	INSERT INTO pokemonName VALUES ('Machamp');
+	INSERT INTO pokemonName VALUES ('Bellsprout');
+	INSERT INTO pokemonName VALUES ('Weepinbell');
+	INSERT INTO pokemonName VALUES ('Victreebel');
+	INSERT INTO pokemonName VALUES ('Tentacool');
+	INSERT INTO pokemonName VALUES ('Tentacruel');
+	INSERT INTO pokemonName VALUES ('Geodude');
+	INSERT INTO pokemonName VALUES ('Graveler');
+	INSERT INTO pokemonName VALUES ('Golem');
+	INSERT INTO pokemonName VALUES ('Ponyta');
+	INSERT INTO pokemonName VALUES ('Rapidash');
+	INSERT INTO pokemonName VALUES ('Slowpoke');
+	INSERT INTO pokemonName VALUES ('Slowbro');
+	INSERT INTO pokemonName VALUES ('Magnemite');
+	INSERT INTO pokemonName VALUES ('Magneton');
+	INSERT INTO pokemonName VALUES ('Farfetch\'d');
+	INSERT INTO pokemonName VALUES ('Doduo');
+	INSERT INTO pokemonName VALUES ('Dodrio');
+	INSERT INTO pokemonName VALUES ('Seel');
+	INSERT INTO pokemonName VALUES ('Dewgong');
+	INSERT INTO pokemonName VALUES ('Grimer');
+	INSERT INTO pokemonName VALUES ('Muk');
+	INSERT INTO pokemonName VALUES ('Shellder');
+	INSERT INTO pokemonName VALUES ('Cloyster');
+	INSERT INTO pokemonName VALUES ('Gastly');
+	INSERT INTO pokemonName VALUES ('Haunter');
+	INSERT INTO pokemonName VALUES ('Gengar');
+	INSERT INTO pokemonName VALUES ('Onix');
+	INSERT INTO pokemonName VALUES ('Drowzee');
+	INSERT INTO pokemonName VALUES ('Hypno');
+	INSERT INTO pokemonName VALUES ('Krabby');
+	INSERT INTO pokemonName VALUES ('Kingler');
+	INSERT INTO pokemonName VALUES ('Voltorb');
+	INSERT INTO pokemonName VALUES ('Electrode');
+	INSERT INTO pokemonName VALUES ('Exeggcute');
+	INSERT INTO pokemonName VALUES ('Exeggutor');
+	INSERT INTO pokemonName VALUES ('Cubone');
+	INSERT INTO pokemonName VALUES ('Marowak');
+	INSERT INTO pokemonName VALUES ('Hitmonlee');
+	INSERT INTO pokemonName VALUES ('Hitmonchan');
+	INSERT INTO pokemonName VALUES ('Lickitung');
+	INSERT INTO pokemonName VALUES ('Koffing');
+	INSERT INTO pokemonName VALUES ('Weezing');
+	INSERT INTO pokemonName VALUES ('Rhyhorn');
+	INSERT INTO pokemonName VALUES ('Rhydon');
+	INSERT INTO pokemonName VALUES ('Chansey');
+	INSERT INTO pokemonName VALUES ('Tangela');
+	INSERT INTO pokemonName VALUES ('Kangaskhan');
+	INSERT INTO pokemonName VALUES ('Horsea');
+	INSERT INTO pokemonName VALUES ('Seadra');
+	INSERT INTO pokemonName VALUES ('Goldeen');
+	INSERT INTO pokemonName VALUES ('Seaking');
+	INSERT INTO pokemonName VALUES ('Staryu');
+	INSERT INTO pokemonName VALUES ('Starmie');
+	INSERT INTO pokemonName VALUES ('Mr. Mime');
+	INSERT INTO pokemonName VALUES ('Scyther');
+	INSERT INTO pokemonName VALUES ('Jynx');
+	INSERT INTO pokemonName VALUES ('Electabuzz');
+	INSERT INTO pokemonName VALUES ('Magmar');
+	INSERT INTO pokemonName VALUES ('Pinsir');
+	INSERT INTO pokemonName VALUES ('Tauros');
+	INSERT INTO pokemonName VALUES ('Magikarp');
+	INSERT INTO pokemonName VALUES ('Gyarados');
+	INSERT INTO pokemonName VALUES ('Lapras');
+	INSERT INTO pokemonName VALUES ('Ditto');
+	INSERT INTO pokemonName VALUES ('Eevee');
+	INSERT INTO pokemonName VALUES ('Vaporeon');
+	INSERT INTO pokemonName VALUES ('Jolteon');
+	INSERT INTO pokemonName VALUES ('Flareon');
+	INSERT INTO pokemonName VALUES ('Porygon');
+	INSERT INTO pokemonName VALUES ('Omanyte');
+	INSERT INTO pokemonName VALUES ('Omastar');
+	INSERT INTO pokemonName VALUES ('Kabuto');
+	INSERT INTO pokemonName VALUES ('Kabutops');
+	INSERT INTO pokemonName VALUES ('Aerodactyl');
+	INSERT INTO pokemonName VALUES ('Snorlax');
+	INSERT INTO pokemonName VALUES ('Articuno');
+	INSERT INTO pokemonName VALUES ('Zapdos');
+	INSERT INTO pokemonName VALUES ('Moltres');
+	INSERT INTO pokemonName VALUES ('Dratini');
+	INSERT INTO pokemonName VALUES ('Dragonair');
+	INSERT INTO pokemonName VALUES ('Dragonite');
+	INSERT INTO pokemonName VALUES ('Mewtwo');
+	INSERT INTO pokemonName VALUES ('Mew');	
+END $$
+
+DROP PROCEDURE IF EXISTS sp_insertIntoPokemonInfo$$
+
+CREATE PROCEDURE sp_insertIntoPokemonInfo(
+	IN pokemonNameParam 	VARCHAR(60),
+	IN latitudeParam 		FLOAT(10, 6),
+	IN longitudeParam 		FLOAT(10,6),
+	IN timeParam			INT
+	)
+BEGIN
+
+INSERT INTO pokemonInfo (
+	pokemonName,
+	latitude,
+	longitude,
+	time
+	)
+
+    VALUES (
+    	pokemonNameParam,
+    	latitudeParam,
+    	longitudeParam,
+    	timeParam
+	);
+
+END$$
+DROP PROCEDURE IF EXISTS sp_selectAllHour $$
+CREATE PROCEDURE sp_selectAllHour ()
+BEGIN
+	SELECT * From hour;
+END $$
+DROP PROCEDURE IF EXISTS sp_selectAllMinute $$
+CREATE PROCEDURE sp_selectAllMinute ()
+BEGIN
+	SELECT * From minute;
+END $$
+DROP PROCEDURE IF EXISTS sp_selectAllPokemonInfo $$
+CREATE PROCEDURE sp_selectAllPokemonInfo ()
+BEGIN
+	SELECT * From Pokemoninfo;
+END $$
+
+DROP PROCEDURE IF EXISTS sp_selectAllPokemonName $$
+CREATE PROCEDURE sp_selectAllPokemonName ()
+BEGIN
+	SELECT * From Pokemonname;
+END $$
+DROP PROCEDURE IF EXISTS sp_selectPokemonInfoByName$$
+
+CREATE PROCEDURE sp_selectPokemonInfoByName(
+	IN pokemonNameParam 	VARCHAR(60)
+	)
+BEGIN
+
+SELECT * FROM pokemonInfo
+WHERE pokemonName = pokemonNameParam;
+
+END$$
