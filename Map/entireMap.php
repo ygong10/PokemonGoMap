@@ -15,6 +15,66 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" type="text/css" href="../css/styles.css" media="screen" />
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+      position:absolute;
+      height:auto;
+      bottom:0;
+      top:0;
+      left:0;
+      right:0;
+      margin-top:50px; /* adjust top margin to your header height */
+      }
+      .controls {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 300px;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      .pac-container {
+        font-family: Roboto;
+      }
+
+      #type-selector {
+        color: #fff;
+        background-color: #4d90fe;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #type-selector label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+      #target {
+        width: 345px;
+      }
+    </style>
   </head>
   <body>
   <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -31,10 +91,11 @@
       <ul class="nav navbar-nav">
         <li><a href="../index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
         <li class="active"><a href="entireMap.php"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>Map</a></li>
-        <li><a href="../FindPokemon/findPokemon.php">Find Pokemon</a></li>
+        <li><a href="../FindPokemon/findPokemon.php"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>Find Pokemon</a></li>
       </ul>
     </div>
   </nav>
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
     <div id="map"></div>
 
     <?php
@@ -46,14 +107,81 @@
       // prompted by your browser. If you see the error "The Geolocation service
       // failed.", it means you probably did not give permission for the browser to
       // locate you.
+      var temp_infowindow = null;
+      var markers = [];
+      var infowindows = [];
+      var placeMarkers = [];
+      var current_infowindow = null;
+      var current_marker = null;
       var locations = eval('<?php echo json_encode($data) ?>');
+
 
       function initMap() {
         var map = new google.maps.Map(document.getElementById('map'), {
           center: {lat: -34.397, lng: 150.644},
           zoom: 17
         });
-        var infoWindow = new google.maps.InfoWindow({map: map});
+
+        // Create the search box and link it to the UI element.
+        var input = document.getElementById('pac-input');
+        var searchBox = new google.maps.places.SearchBox(input);
+        map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+        // Bias the SearchBox results towards current map's viewport.
+        map.addListener('bounds_changed', function() {
+          searchBox.setBounds(map.getBounds());
+        });
+
+        
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener('places_changed', function() {
+          var places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+
+          if (current_marker){
+            current_marker.setMap(null);
+          }
+          // Clear out the old markers.
+          placeMarkers.forEach(function(marker) {
+            marker.setMap(null);
+          });
+
+       // For each place, get the icon, name and location.
+          var bounds = new google.maps.LatLngBounds();
+          places.forEach(function(place) {
+            var icon = {
+              url: "https://upload.wikimedia.org/wikipedia/en/3/39/Pokeball.PNG",
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(10, 20),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+
+            placeMarkers.push(new google.maps.Marker({
+              map: map,
+              icon: icon,
+              title: place.name,
+              position: place.geometry.location
+            }));
+
+            // Create a marker for each place.
+            temp_infowindow = new google.maps.InfoWindow({map: map});
+            temp_infowindow.setPosition(place.geometry.location);
+            temp_infowindow.setContent("You're here!");
+
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          map.fitBounds(bounds);
+        });
 
         // Try HTML5 geolocation.
         if (navigator.geolocation) {
@@ -63,11 +191,24 @@
               lng: position.coords.longitude
             };
 
-            var markers = [];
-            var infowindows = [];
-            var current_infowindow = new google.maps.InfoWindow({map: map});
+            current_marker = new google.maps.Marker({
+              map: map,
+              icon: {
+                url: "https://upload.wikimedia.org/wikipedia/en/3/39/Pokeball.PNG",
+                size: new google.maps.Size(71, 71),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(10, 20),
+                scaledSize: new google.maps.Size(25, 25)
+              },
+              title: "Current Location",
+              position: pos
+            });
+
+            current_infowindow = new google.maps.InfoWindow({map: map});
             current_infowindow.setPosition(pos);
             current_infowindow.setContent("You're here!");
+
+
 
             for (var i = 0; i < locations.length; i++) { 
               var hour = locations[i]['hour'];
@@ -91,14 +232,21 @@
                 icon: createMarkerIcon(locations[i]['pokemonName'])
               });
 
-              google.maps.event.addListener(markers[i], 'click', (function(marker, i) {
+              google.maps.event.addListener(markers[i], 'mouseover', (function(marker, i) {
                 return function() {
                   infowindows[i].open(map, markers[i]);
                 }
               })(markers[i], i));   
 
-              google.maps.event.addListener(map, 'click', (function(i) {    
+              google.maps.event.addListener(markers[i], 'mouseout', (function(i) {    
                 return function() {
+                  if (temp_infowindow){
+                    temp_infowindow.close();
+                  }
+                  if (current_infowindow){
+                    current_infowindow.close();
+                  }
+                 
                   infowindows[i].close();
                 }      
               })(i));          
@@ -106,10 +254,12 @@
 
             map.setCenter(pos);
           }, function() {
+            var infoWindow = new google.maps.InfoWindow({map: map});
             handleLocationError(true, infoWindow, map.getCenter());
           });
         } else {
           // Browser doesn't support Geolocation
+          var infoWindow = new google.maps.InfoWindow({map: map});
           handleLocationError(false, infoWindow, map.getCenter());
         }
       }
@@ -146,7 +296,7 @@
       }
     </script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtyWeN6mNfW3M9qgViPCE6JwQJSjRxwTo&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtyWeN6mNfW3M9qgViPCE6JwQJSjRxwTo&libraries=places&callback=initMap">
     </script>
   </body>
 </html>

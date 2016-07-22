@@ -9,6 +9,9 @@ BEGIN
 	hour			INT NOT NULL ,
 	minute			INT NOT NULL ,
 	createdDate		DATETIME NOT NULL,
+	updatedDate		DATETIME NOT NULL,
+	spawnDuration		INT NOT NULL,
+	UNIQUE(pokemonName, latitude, longitude),
 	FOREIGN KEY (pokemonName) REFERENCES pokemonName(pokemonName),
 	FOREIGN KEY (hour) REFERENCES hour(Id),
 	FOREIGN KEY (minute) REFERENCES minute(Id)
