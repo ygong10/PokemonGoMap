@@ -90,8 +90,8 @@
       <div class="collapse navbar-collapse " id="myNavbar">
       <ul class="nav navbar-nav">
         <li><a href="../index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
-        <li class="active"><a href="entireMap.php"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>Map</a></li>
-        <li><a href="../FindPokemon/findPokemon.php"><span class="glyphicon glyphicon-search" aria-hidden="true"></span>Find Pokemon</a></li>
+        <li><a href="spawnMap.php"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>Map</a></li>
+        <li class="active"><a href="entireMap.php">Archive</a></li>
       </ul>
     </div>
   </nav>

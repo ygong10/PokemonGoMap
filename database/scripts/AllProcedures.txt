@@ -23,6 +23,9 @@ BEGIN
 	hour			INT NOT NULL ,
 	minute			INT NOT NULL ,
 	createdDate		DATETIME NOT NULL,
+	updatedDate		DATETIME NOT NULL,
+	spawnDuration		INT NOT NULL,
+	UNIQUE(pokemonName, latitude, longitude),
 	FOREIGN KEY (pokemonName) REFERENCES pokemonName(pokemonName),
 	FOREIGN KEY (hour) REFERENCES hour(Id),
 	FOREIGN KEY (minute) REFERENCES minute(Id)
@@ -291,7 +294,11 @@ CREATE PROCEDURE sp_insertIntoPokemonInfo(
 	IN pokemonNameParam 	VARCHAR(60),
 	IN latitudeParam 		FLOAT(10, 6),
 	IN longitudeParam 		FLOAT(10,6),
-	IN timeParam			INT
+	IN hourParam			INT,
+	IN minuteParam			INT,
+	IN createdDateParam		DATETIME,
+	IN updatedDateParam		DATETIME,
+	IN spawnDurationParam		INT
 	)
 BEGIN
 
@@ -299,16 +306,24 @@ INSERT INTO pokemonInfo (
 	pokemonName,
 	latitude,
 	longitude,
-	time
+	hour,
+	minute,
+	createdDate,
+	updatedDate,
+	spawnDuration
 	)
 
     VALUES (
     	pokemonNameParam,
     	latitudeParam,
     	longitudeParam,
-    	timeParam
-	);
-
+    	hourParam,
+	minuteParam,
+	createdDateParam,
+	updatedDateParam,
+	spawnDurationParam
+	)
+	ON DUPLICATE KEY UPDATE updatedDate = updatedDateParam, spawnDuration = spawnDurationParam;
 END$$
 DROP PROCEDURE IF EXISTS sp_selectAllHour $$
 CREATE PROCEDURE sp_selectAllHour ()
@@ -331,6 +346,13 @@ CREATE PROCEDURE sp_selectAllPokemonName ()
 BEGIN
 	SELECT * From Pokemonname;
 END $$
+DROP PROCEDURE IF EXISTS sp_selectAllSpawnedPokemon $$
+CREATE PROCEDURE sp_selectAllSpawnedPokemon ()
+BEGIN
+	SELECT * From Pokemoninfo
+	WHERE DATE_ADD(createdDate, INTERVAL spawnDuration SECOND) > NOW() AND spawnDuration >= 0;
+END $$
+
 DROP PROCEDURE IF EXISTS sp_selectPokemonInfoByName$$
 
 CREATE PROCEDURE sp_selectPokemonInfoByName(
@@ -342,3 +364,12 @@ SELECT * FROM pokemonInfo
 WHERE pokemonName = pokemonNameParam;
 
 END$$
+DROP PROCEDURE IF EXISTS sp_selectSpawnedPokemonInfoByName $$
+CREATE PROCEDURE sp_selectSpawnedPokemonInfoByName (
+		IN pokemonNameParam 	VARCHAR(60)
+)
+BEGIN
+	SELECT * From Pokemoninfo
+	WHERE DATE_ADD(createdDate, INTERVAL spawnDuration SECOND) > NOW() AND spawnDuration >= 0 AND pokemonName = pokemonNameParam;
+END $$
+

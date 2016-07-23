@@ -40,7 +40,7 @@
       <div class="collapse navbar-collapse " id="myNavbar">
       <ul class="nav navbar-nav">
         <li><a href="../index.html"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
-        <li><a href="../Map/entireMap.php"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>Map</a></li>
+        <li><a href="../Map/spawnMap.php"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>Map</a></li>
       </ul>
     </div>
   </nav>
