@@ -203,6 +203,7 @@
         // more details for that place.
         searchBox.addListener('places_changed', function() {
           var places = searchBox.getPlaces();
+          
 
           if (places.length == 0) {
             return;
@@ -212,12 +213,15 @@
             currentMarker.setMap(null);
           }
           // Clear out the old markers.
-          placeMarkers.forEach(function(marker) {
+          /*placeMarkers.forEach(function(marker) {
             marker.setMap(null);
-          });
+          });*/
+          globalPosition = places[0].geometry.location;
+          setCurrentMarker(map);
+
 
        // For each place, get the icon, name and location.
-          var bounds = new google.maps.LatLngBounds();
+        /*  var bounds = new google.maps.LatLngBounds();
           places.forEach(function(place) {
             var icon = {
               url: "https://upload.wikimedia.org/wikipedia/en/3/39/Pokeball.PNG",
@@ -245,7 +249,7 @@
               bounds.extend(place.geometry.location);
             }
           });
-          map.fitBounds(bounds);
+          map.fitBounds(bounds); */
         });
 
 
