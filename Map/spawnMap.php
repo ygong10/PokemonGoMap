@@ -84,10 +84,11 @@
       }
       #scanner{
         margin-bottom: 20px;
-        margin-right: 40px;
       }
       #relocate{
         margin-bottom: 20px;
+        margin-right: 10px;
+        
       }
       #filter{
         margin-left: -5px;
@@ -181,10 +182,6 @@
         var searchBox = new google.maps.places.SearchBox(input);
         map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-        var scanner = document.getElementById('scanner'); 
-        scanner.index = 1;   
-        map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(scanner); 
-
         var filter = document.getElementById('filter'); 
         filter.index = 1;   
         map.controls[google.maps.ControlPosition.LEFT_TOP].push(filter);  
@@ -192,6 +189,11 @@
         var relocate = document.getElementById('relocate'); 
         relocate.index = 1;   
         map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(relocate);  
+
+        var scanner = document.getElementById('scanner'); 
+        scanner.index = 1;   
+        map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(scanner); 
+
 
         // Bias the SearchBox results towards current map's viewport.
         map.addListener('bounds_changed', function() {
@@ -299,9 +301,13 @@
       }
 
       function scan(){
+        var scannerId = document.getElementById('scanner');
+        scannerId.disabled = true;
         document.getElementById('scanner').innerHTML = "Scanning...";
+        
         $.post("runAPI.php",{lat: globalPosition.lat, long: globalPosition.lng}, function(data){
-          if (data == "done"){
+          //alert(data);
+	  if (data == "done"){
             document.getElementById('scanner').innerHTML = "Scan Finished";
             document.getElementById('scanner').className = "btn btn-success";
           }else{
@@ -310,10 +316,25 @@
           }
           $.post( "../database/retrieveSpawnedPokemon.php", function( loc ) {
             locations = eval(loc);
-            setTimeout(function(){
-              document.getElementById('scanner').innerHTML = '<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Scan';
+            var counter = 10; 
+            var scanCooldown = setInterval(function(){
+              counter--;
+              document.getElementById('scanner').innerHTML = 'Ready in ' + counter + ' secs';
               document.getElementById('scanner').className = "btn btn-primary";
-            }, 2000);
+              if (counter <= 0){
+		scannerId.innerHTML = '<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Scan';
+		scannerId.className = "btn btn-primary";
+		scannerId.disabled = false;
+                clearInterval(scanCooldown);
+              }
+            }, 1000);
+
+            //setTimeout(function(){
+            //	document.getElementById('scanner').innerHTML = '<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Scan';
+           //	document.getElementById('scanner').className = "btn btn-primary";
+           //  	scannerId.disabled = false;
+           // }, 10000);
+            
             setInfo(map, locations);
           });
         });
@@ -402,7 +423,10 @@
       }
       function setInfo(map, locations){
           removeEverything(map, locations);
+	  var clientNow = new Date;
+	  var utcHour = clientNow.getUTCHours();
           for (var i = 0; i < locations.length; i++) {
+	  var chicagoHour = utcHour + 5;
           var updatedTime = new Date(locations[i]['updatedDate'].replace(/-/g,"/"));
           var duration = parseInt(locations[i]['spawnDuration']);
 
@@ -410,8 +434,8 @@
           var durationMinutes = Math.floor(durations[i] / 60);
           var durationSeconds = durations[i] - durationMinutes * 60;
 
-          var hour = locations[i]['hour'];
-          var minute = (locations[i]['minute'] < 10 ? '0' + locations[i]['minute'] : locations[i]['minute']);
+          var hour = clientNow.getHours();//locations[i]['hour'];
+          var minute = clientNow.getMinutes() < 10 ? '0' + clientNow.getMinutes() : clientNow.getMinutes();
           var AMPM = (hour>= 12 ? 'PM' : 'AM');
           if (hour > 12){
             hour -= 12;
@@ -457,12 +481,21 @@
      
         }
       }
-      // reload markers and infowindows every second
+      // reload markers and infowindows every secondi
+     function reloadMap(map, markers, infowindows){
       setInterval(function(){
+	console.log('test');
+	var clientNow = new Date;
+	var clientHour = parseInt(clientNow.getHours());
+	var clientMinute = parseInt(clientNow.getMinutes());
+	//setInfo(map, locations);
         for (var i=0; i < locations.length; i++) {
-          var hour = locations[i]['hour'];
-          var minute = (locations[i]['minute'] < 10 ? '0' + locations[i]['minute'] : locations[i]['minute']);
-          var AMPM = (hour>= 12 ? 'PM' : 'AM');
+	  var dataHour = parseInt(locations[i]['hour']);
+	  var chicagoHour = parseInt(clientNow.getUTCHours()) - 5;
+	  var offset = chicagoHour - clientHour;
+          var hour = dataHour + offset;
+          var minute = locations[i]['minute'] < 10 ? '0' + locations[i]['minute'] : locations[i]['minute'];
+          var AMPM = (hour>= 12? 'PM' : 'AM');
           if (hour > 12){
             hour -= 12;
           }
@@ -480,6 +513,9 @@
 
         }
       }, 1000);
+    }
+
+    reloadMap(map, markers, infowindows);
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtyWeN6mNfW3M9qgViPCE6JwQJSjRxwTo&libraries=places&callback=initMap">

@@ -3,6 +3,5 @@
 	$sqlNames = "CALL sp_selectAllPokemonName";
 	
 	$names = $con->query($sqlNames);
-		ChromePhp::log($result);
-	
+		ChromePhp::log($result);	
 ?>

@@ -1,2 +1,0 @@
-1. remember to set up virtualenv in the same directory as the php running it
-2. provide full path to the execute virtualenv python
