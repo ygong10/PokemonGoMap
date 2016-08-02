@@ -214,44 +214,10 @@
           if (currentMarker){
             currentMarker.setMap(null);
           }
-          // Clear out the old markers.
-          /*placeMarkers.forEach(function(marker) {
-            marker.setMap(null);
-          });*/
+
           globalPosition = places[0].geometry.location;
           setCurrentMarker(map);
 
-
-       // For each place, get the icon, name and location.
-        /*  var bounds = new google.maps.LatLngBounds();
-          places.forEach(function(place) {
-            var icon = {
-              url: "https://upload.wikimedia.org/wikipedia/en/3/39/Pokeball.PNG",
-              size: new google.maps.Size(71, 71),
-              origin: new google.maps.Point(0, 0),
-              anchor: new google.maps.Point(10, 20),
-              scaledSize: new google.maps.Size(25, 25)
-            };
-
-            placeMarkers.push(new google.maps.Marker({
-              map: map,
-              icon: icon,
-              title: place.name,
-              position: place.geometry.location
-            }));
-
-            globalPosition = place.geometry.location;
-
-            // Create a marker for each place.
-
-            if (place.geometry.viewport) {
-              // Only geocodes have viewport.
-              bounds.union(place.geometry.viewport);
-            } else {
-              bounds.extend(place.geometry.location);
-            }
-          });
-          map.fitBounds(bounds); */
         });
 
 
@@ -306,8 +272,7 @@
         document.getElementById('scanner').innerHTML = "Scanning...";
         
         $.post("runAPI.php",{lat: globalPosition.lat, long: globalPosition.lng}, function(data){
-          //alert(data);
-	  if (data == "done"){
+	       if (data == "done"){
             document.getElementById('scanner').innerHTML = "Scan Finished";
             document.getElementById('scanner').className = "btn btn-success";
           }else{
@@ -322,18 +287,12 @@
               document.getElementById('scanner').innerHTML = 'Ready in ' + counter + ' secs';
               document.getElementById('scanner').className = "btn btn-primary";
               if (counter <= 0){
-		scannerId.innerHTML = '<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Scan';
-		scannerId.className = "btn btn-primary";
-		scannerId.disabled = false;
+            		scannerId.innerHTML = '<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Scan';
+            		scannerId.className = "btn btn-primary";
+            		scannerId.disabled = false;
                 clearInterval(scanCooldown);
               }
             }, 1000);
-
-            //setTimeout(function(){
-            //	document.getElementById('scanner').innerHTML = '<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Scan';
-           //	document.getElementById('scanner').className = "btn btn-primary";
-           //  	scannerId.disabled = false;
-           // }, 10000);
             
             setInfo(map, locations);
           });
@@ -423,10 +382,7 @@
       }
       function setInfo(map, locations){
           removeEverything(map, locations);
-	  var clientNow = new Date;
-	  var utcHour = clientNow.getUTCHours();
           for (var i = 0; i < locations.length; i++) {
-	  var chicagoHour = utcHour + 5;
           var updatedTime = new Date(locations[i]['updatedDate'].replace(/-/g,"/"));
           var duration = parseInt(locations[i]['spawnDuration']);
 
@@ -434,8 +390,7 @@
           var durationMinutes = Math.floor(durations[i] / 60);
           var durationSeconds = durations[i] - durationMinutes * 60;
 
-          var hour = clientNow.getHours();//locations[i]['hour'];
-          var minute = clientNow.getMinutes() < 10 ? '0' + clientNow.getMinutes() : clientNow.getMinutes();
+          var hour = locations[i]['hour'];
           var AMPM = (hour>= 12 ? 'PM' : 'AM');
           if (hour > 12){
             hour -= 12;
@@ -484,16 +439,8 @@
       // reload markers and infowindows every secondi
      function reloadMap(map, markers, infowindows){
       setInterval(function(){
-	console.log('test');
-	var clientNow = new Date;
-	var clientHour = parseInt(clientNow.getHours());
-	var clientMinute = parseInt(clientNow.getMinutes());
-	//setInfo(map, locations);
         for (var i=0; i < locations.length; i++) {
-	  var dataHour = parseInt(locations[i]['hour']);
-	  var chicagoHour = parseInt(clientNow.getUTCHours()) - 5;
-	  var offset = chicagoHour - clientHour;
-          var hour = dataHour + offset;
+	        var hour = parseInt(locations[i]['hour']);
           var minute = locations[i]['minute'] < 10 ? '0' + locations[i]['minute'] : locations[i]['minute'];
           var AMPM = (hour>= 12? 'PM' : 'AM');
           if (hour > 12){
@@ -510,7 +457,6 @@
                 'Spawned Around: ' + '<b>' + hour + ':' + minute + ' ' + AMPM + '</b>' + '</br>' +
                 'Time Left: ' + '<b>' + durationMinutes + ' min ' + durationSeconds  + ' seconds' + '</b>' + '</br>' +
                 '<a href=' + '"https://www.google.com/maps/dir/current+location/' + locations[i]['latitude'] + ',' + locations[i]['longitude'] + '"' + ' target=' + '"_blank"' + 'style="text-decoration:none;">' +  'Get Directions</a>');
-
         }
       }, 1000);
     }
@@ -518,7 +464,7 @@
     reloadMap(map, markers, infowindows);
     </script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAtyWeN6mNfW3M9qgViPCE6JwQJSjRxwTo&libraries=places&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key=[Your API Key Here]&libraries=places&callback=initMap">
     </script>
   </body>
 </html>
